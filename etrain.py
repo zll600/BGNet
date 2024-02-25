@@ -95,9 +95,9 @@ if __name__ == '__main__':
     parser.add_argument('--epoch', type=int,
                         default=25, help='epoch number')
     parser.add_argument('--lr', type=float,
-                        default=1e-4, help='learning rate')
+                        default=1.5e-5, help='learning rate')
     parser.add_argument('--batchsize', type=int,
-                        default=16, help='training batch size')
+                        default=2, help='training batch size')
     parser.add_argument('--trainsize', type=int,
                         default=416, help='training dataset size')
     parser.add_argument('--clip', type=float,
