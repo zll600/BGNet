@@ -1,3 +1,5 @@
+I use GTX-1650-4G so I need change code according to the https://github.com/thograce/BGNet/issues/2
+
 # BGNet: Boundary-Guided Camouflaged Object Detection (IJCAI 2022)
 
 
