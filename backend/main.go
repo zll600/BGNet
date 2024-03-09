@@ -19,7 +19,7 @@ var dataPaths = [2]string{
 	"/home/andy/Code/github/BGNet/web/data/GT/",
 }
 
-const savePaths = "/home/andy/Code/github/BGNet/web/result/"
+const savePath = "/home/andy/Code/github/BGNet/web/result/"
 
 func main() {
 	r := gin.Default()
@@ -54,16 +54,22 @@ func main() {
 			// Upload the file to specific dst.
 			c.SaveUploadedFile(file, dataPaths[file_idx]+file.Filename)
 		}
+
 		getResultImage()
 		c.Header("Content-Type", "image/png")
-		c.File(savePaths + files[1].Filename)
+		c.File(savePath + files[1].Filename)
+	})
+
+	r.GET("/test", func(c *gin.Context) {
+		c.Header("Content-Type", "image/png")
+		c.File(savePath + "camourflage_00012.png")
 	})
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
 
 func getResultImage() error {
 	args := []string{
-		"etest_one.py",
+		"/home/andy/Code/github/BGNet/etest_one.py",
 	}
 	cmd := exec.Command("python3", args...)
 	var stdout, stderr bytes.Buffer
