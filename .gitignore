@@ -1,0 +1,13 @@
+BGNet.pth
+TestDataset.zip
+TrainDataset.zip
+res2net50_v1b_26w_4s-3cf99910.pth
+
+
+checkpoints/*
+data/*
+results/*
+log/*
+models/*
+
+*/__pycache__/*
