@@ -10,4 +10,10 @@ results/*
 log/*
 models/*
 
+test_data/
+result_data/
+
 */__pycache__/*
+
+evalresults.txt
+web/
