@@ -2,23 +2,22 @@
   <div class="top-container">
     <div class="upload-section">
       <div class="left-section">
-        <label for="Img">Upload Img:</label>
+        <label for="Img">上传图片:</label>
         <input type="file" id="Img" @change="onFileChange(0, $event)" />
         <img :src="imageContents[0]" v-if="imageContents && imageContents[0]" />
       </div>
 
       <div class="right-section">
-        <label for="GT">Upload GT:</label>
+        <label for="GT">上传 GT:</label>
         <input type="file" id="GT" @change="onFileChange(1, $event)" />
         <img :src="imageContents[1]" v-if="imageContents && imageContents[1]" />
       </div>
     </div>
 
-    <button class="btn" @click="confirmUpload">Confirm</button>
-
+    <button class="btn" @click="confirmUpload">生成结果</button>
 
     <div class="preview-section">
-      <label>Preview Image:</label>
+      <label for="preview">结果预览:</label>
       <img :src="newImageContent" v-if="newImageContent" />
     </div>
   </div>
@@ -74,7 +73,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-
 .top-container {
   display: flex;
   justify-content: space-between;
@@ -92,21 +90,28 @@ onMounted(() => {
   display: flex;
   justify-content: space-around;
   flex-direction: row;
-  padding: 20px;
-  margin: 20px;
-  background-color: #ffffff; /* White background for upload section */
+  /* padding: 20px; */
+  margin-top: 20px;
+  /* background-color: #ffffff;  */
+  /* White background for upload section */
 }
 
 .left-section {
   width: 50%;
   height: 100%;
-  padding: 20px;
+  padding: 20px 10px 0px 20px;
+  margin-left: 10px;
+  border-radius: 10px; /* Rounded corners */
+  outline-style: groove;
 }
 
 .right-section {
   width: 50%;
   height: 100%;
-  padding: 20px;
+  padding: 20px 20px 0px 10px;
+  margin-right: 10px;
+  border-radius: 10px;
+  outline-style: groove;
 }
 
 .left-section,
@@ -119,52 +124,61 @@ onMounted(() => {
   width: 200px;
   height: 50px;
   align-self: center;
-  margin-top: 20px;
-}
-
-.preview-section {
-  padding: 20px;
-  width: 100%;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #ffffff; /* White background for preview section */
-}
-
-/* Add styles for input elements */
-input[type="file"] {
-  display: none; /* Hide the default file input */
-}
-
-label[for="Img"],
-label[for="GT"] {
+  /* margin-top: 20px; */
   cursor: pointer; /* Change cursor to pointer on labels */
   padding: 8px 12px; /* Add padding to labels */
-  background-color: #4CAF50; /* Green background color */
+  background-color: #4caf50; /* Green background color */
   color: white; /* White text color */
   border-radius: 4px; /* Rounded corners */
   display: block;
 }
 
-label[for="Img"]:hover,
-label[for="GT"]:hover {
+.preview-section {
+  padding: 20px;
+  margin: 10px 10px 10px 10px;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* background-color: #ffffff;  */
+  /* White background for preview section */
+  border-radius: 10px;
+  outline-style: groove;
+}
+
+/* Add styles for input elements */
+input[type='file'] {
+  display: none; /* Hide the default file input */
+}
+
+label[for='Img'],
+label[for='GT'] {
+  cursor: pointer; /* Change cursor to pointer on labels */
+  padding: 8px 12px; /* Add padding to labels */
+  background-color: #4caf50; /* Green background color */
+  color: white; /* White text color */
+  border-radius: 4px; /* Rounded corners */
+  display: block;
+}
+
+label[for='Img']:hover,
+label[for='GT']:hover {
   background-color: #45a049; /* Darker green on hover */
 }
 
-input[type="file"] + label {
+input[type='file'] + label {
   margin-top: 10px; /* Add top margin between input and label */
   /* display: inline-block; */
 }
 
-input[type="file"] + label::before {
+input[type='file'] + label::before {
   content: 'Select File'; /* Custom text before the label */
 }
 
-input[type="file"] + label:hover {
+input[type='file'] + label:hover {
   background-color: #45a049; /* Darker green on hover */
 }
-
 
 .preview-section label {
   align-self: center;
@@ -176,5 +190,4 @@ input[type="file"] + label:hover {
   max-width: 100%;
   max-height: 400px;
 }
-
 </style>
