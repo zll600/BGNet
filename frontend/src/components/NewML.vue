@@ -4,13 +4,16 @@
       <div id="icon" class="">
         <NImage src="/public/xy_logo.png"></NImage>
       </div>
-      <div id="info" class="flex flex-col content-stretch">
+      <div id="info" class="flex flex-col flex-wrap content-between">
         <label class="text-[#fff] font-mono text-lg">计算机学院</label>
-        <br>
+        <br />
         <label class="text-[#fff] font-mono text-lg">张磊刚</label>
       </div>
     </div>
-    <div id="content" class="flex flex-row justify-between h-5/7 p-2 bg-gray-100">
+    <div
+      id="content"
+      class="flex flex-row flex-wrap justify-between content-stretch h-5/7 p-2 bg-gray-100"
+    >
       <div id="left" class="flex flex-col content-between w-2/5">
         <div id="upload-image" class="w-full h-1/2">
           <NUpload
@@ -30,10 +33,15 @@
         <NDivider></NDivider>
       </div>
       <div id="button" class="w-1/5 flex justify-center content-center">
-        <NButton type="primary" @click="confirmUpload">生成结果</NButton>
+        <NButton type="primary" :loading="loading" @click="confirmUpload">生成结果</NButton>
       </div>
       <div id="preview" class="w-2/5">
-        <NImage v-if="newImageContent" :src="newImageContent" :width="100" :alt="`Generated Image`" />
+        <NImage
+          v-if="newImageContent"
+          :src="newImageContent"
+          :width="100"
+          :alt="`Generated Image`"
+        />
       </div>
     </div>
   </div>
@@ -47,6 +55,7 @@ import { NUpload, NButton, NImage, NDivider, type UploadFileInfo } from 'naive-u
 const imageURLs = ref<[File | null, File | null]>([null, null])
 const newImageContent = ref<string | null>(null)
 const fileList = ref<UploadFileInfo[]>([])
+const loading = ref<boolean>(false)
 
 function changeHandler(options: {
   file: UploadFileInfo
@@ -68,6 +77,10 @@ function finishHandler(file: UploadFileInfo): UploadFileInfo {
 const previewImageUrlRef1 = ref('')
 
 async function confirmUpload() {
+  loading.value = true
+  setTimeout(() => {
+    loading.value = false
+  }, 60 * 1000)
   try {
     const response = await axios.get('http://127.0.0.1:8080/generate', {
       responseType: 'arraybuffer'
@@ -79,6 +92,8 @@ async function confirmUpload() {
     newImageContent.value = URL.createObjectURL(blob)
   } catch (error) {
     console.error('fail to upload file', error)
+  } finally {
+    loading.value = false
   }
 }
 

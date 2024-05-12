@@ -570,16 +570,8 @@ video {
   display: flex;
 }
 
-.grid {
-  display: grid;
-}
-
 .h-1\/2 {
   height: 50%;
-}
-
-.h-full {
-  height: 100%;
 }
 
 .h-screen {
@@ -602,16 +594,8 @@ video {
   width: 100vw;
 }
 
-.min-w-full {
-  min-width: 100%;
-}
-
 .flex-grow {
   flex-grow: 1;
-}
-
-.grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .flex-row {
@@ -620,6 +604,10 @@ video {
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .content-center {
@@ -640,10 +628,6 @@ video {
 
 .justify-between {
   justify-content: space-between;
-}
-
-.gap-4 {
-  gap: 1rem;
 }
 
 .border {
