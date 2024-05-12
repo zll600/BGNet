@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -20,6 +21,8 @@ var dataPaths = [2]string{
 }
 
 const savePath = "/home/andy/Code/github/BGNet/web/result/"
+
+var fileName string
 
 func main() {
 	r := gin.Default()
@@ -37,6 +40,50 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	r.POST("/uploadv2", func(c *gin.Context) {
+		// Multipart form
+		form, _ := c.MultipartForm()
+		files := form.File["file"]
+
+		for file_idx, file := range files {
+			slog.Info("lgz debug", "PWD: ", os.Getenv("PWD"), "file: ", file.Filename)
+			if strings.HasSuffix(file.Filename, ".png") {
+				fileName = file.Filename
+			}
+			c.SaveUploadedFile(file, dataPaths[file_idx]+file.Filename)
+		}
+	})
+
+	r.GET("/generate", func(c *gin.Context) {
+		getResultImage()
+		c.Header("Content-Type", "image/png")
+		c.File(savePath + fileName)
+	})
+
+	r.POST("/uploadv3", func(c *gin.Context) {
+		// Multipart form
+		form, _ := c.MultipartForm()
+		files := form.File["upload[]"]
+		if len(files) != 2 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"err": "upload not two files",
+			})
+			return
+		}
+
+		for file_idx, file := range files {
+			slog.Info("lgz debug", "PWD: ", os.Getenv("PWD"))
+
+			// Upload the file to specific dst.
+			c.SaveUploadedFile(file, dataPaths[file_idx]+file.Filename)
+		}
+
+		getResultImage()
+		c.Header("Content-Type", "image/png")
+		c.File(savePath + files[1].Filename)
+	})
+
 	r.POST("/upload", func(c *gin.Context) {
 		// Multipart form
 		form, _ := c.MultipartForm()
