@@ -1,6 +1,6 @@
 <template>
-  <div id="page" class="flex flex-col w-screen h-screen">
-    <div id="topbar" class="flex flex-row justify-between h-2/7 p-4 bg-[#014a95]">
+  <div id="page" class="flex flex-col flex-wrap w-screen h-screen content-stretch">
+    <div id="topbar" class="flex flex-row justify-between h-1/6 p-4 bg-[#014a95]">
       <div id="icon" class="">
         <NImage src="/public/xy_logo.png"></NImage>
       </div>
@@ -12,10 +12,11 @@
     </div>
     <div
       id="content"
-      class="flex flex-row flex-wrap justify-between content-stretch h-5/7 p-2 bg-gray-100"
+      class="flex flex-row flex-wrap justify-between content-stretch h-5/6 p-2 bg-gray-100"
     >
-      <div id="left" class="flex flex-col content-between w-2/5">
-        <div id="upload-image" class="w-full h-1/2">
+      <div id="left" class="flex flex-col justify-between items-center content-between w-2/5">
+        <label class="font-mono text-lg">上传两张照片，原图是 jpg 格式，GT 是 png 格式</label>
+        <div id="upload-image" class="w-full h-1/2 flex flex-col items-center content-center">
           <NUpload
             class="w-full bg-sky-100"
             accept="image/*"
@@ -30,16 +31,17 @@
             :alt="`Uploaded Image 1`"
           />
         </div>
-        <NDivider></NDivider>
       </div>
-      <div id="button" class="w-1/5 flex justify-center content-center">
+      <div id="button" class="w-1/5 flex justify-center items-center content-center">
         <NButton type="primary" :loading="loading" @click="confirmUpload">生成结果</NButton>
       </div>
-      <div id="preview" class="w-2/5">
+      <div id="preview" class="w-2/5 flex flex-col justify-center items-center content-between">
+        <label class="font-mono text-lg">预览结果：</label>
         <NImage
           v-if="newImageContent"
           :src="newImageContent"
-          :width="100"
+          :height="416"
+          :width="416"
           :alt="`Generated Image`"
         />
       </div>
@@ -50,7 +52,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import { NUpload, NButton, NImage, NDivider, type UploadFileInfo } from 'naive-ui'
+import { NUpload, NButton, NImage, type UploadFileInfo } from 'naive-ui'
 
 const imageURLs = ref<[File | null, File | null]>([null, null])
 const newImageContent = ref<string | null>(null)
