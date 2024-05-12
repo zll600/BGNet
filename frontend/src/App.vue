@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import ML from './components/ML.vue'
+// import ML from './components/ML.vue'
 import NewML from './components/NewML.vue'
+import { NMessageProvider } from 'naive-ui'
 </script>
 
 <template>
-  <NewML />
+  <NMessageProvider>
+    <NewML />
+  </NMessageProvider>
 </template>

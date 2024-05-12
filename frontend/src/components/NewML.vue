@@ -10,10 +10,7 @@
         <label class="text-[#fff] font-mono text-lg">张磊刚</label>
       </div>
     </div>
-    <div
-      id="content"
-      class="flex flex-row flex-wrap justify-between content-stretch h-5/6 p-2 bg-gray-100"
-    >
+    <div id="content" class="flex flex-row flex-wrap justify-between content-stretch h-5/6 p-2">
       <div id="left" class="flex flex-col justify-between items-center content-between w-2/5">
         <label class="font-mono text-lg">上传两张照片，原图是 jpg 格式，GT 是 png 格式</label>
         <div id="upload-image" class="w-full h-1/2 flex flex-col items-center content-center">
@@ -22,8 +19,10 @@
             accept="image/*"
             list-type="image-card"
             action="http://127.0.0.1:8080/uploadv2"
-            :default-file-list="fileList"
-            @change="changeHandler"
+            v-model:file-list="fileList"
+            @change="handleUploadChange"
+            @remove="handleRemove"
+            @update:file-list="handleFileListChange"
           />
           <NImage
             v-if="previewImageUrlRef1.length > 0"
@@ -52,28 +51,30 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import { NUpload, NButton, NImage, type UploadFileInfo } from 'naive-ui'
+import { NUpload, NButton, NImage, useMessage, type UploadFileInfo } from 'naive-ui'
 
 const imageURLs = ref<[File | null, File | null]>([null, null])
 const newImageContent = ref<string | null>(null)
 const fileList = ref<UploadFileInfo[]>([])
 const loading = ref<boolean>(false)
+const message = useMessage()
 
-function changeHandler(options: {
+function handleUploadChange(options: {
   file: UploadFileInfo
   fileList: Array<UploadFileInfo>
   event?: Event
 }): void {
   console.log(options)
-  fileList.value.push(options.file)
+  fileList.value = options.fileList
   console.log(fileList.value)
-  console.log(options.fileList)
 }
 
-function finishHandler(file: UploadFileInfo): UploadFileInfo {
-  file.status = 'finished'
-  fileList.value.push(file)
-  return file
+const handleFileListChange = () => {
+  message.info('是的，file-list 的值变了')
+}
+
+const handleRemove = (data: { file: UploadFileInfo; fileList: UploadFileInfo[] }) => {
+  message.info('删除照片 ' + data.file.id)
 }
 
 const previewImageUrlRef1 = ref('')
