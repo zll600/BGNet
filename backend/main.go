@@ -55,9 +55,26 @@ func main() {
 		}
 	})
 
-	r.GET("/generate", func(c *gin.Context) {
-		getResultImage()
+	r.POST("/generate", func(c *gin.Context) {
+		ch := make(chan struct{})
+		go func() {
+			// JSON body
+			body := []byte(`{
+				"title": "Post title",
+				"body": "Post description",
+				"userId": 1
+				}`)
+
+			_, err := http.Post("http://127.0.0.1:5000/model", "application/json", bytes.NewBuffer(body))
+			if err != nil {
+				slog.Error("error when call model", "err", err)
+			}
+			ch <- struct{}{}
+		}()
+		<-ch
+		// getResultImage()
 		c.Header("Content-Type", "image/png")
+		// c.Header("Access-Control-Allow-Origin", "*")
 		c.File(savePath + fileName)
 	})
 

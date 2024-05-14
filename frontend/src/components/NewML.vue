@@ -2,7 +2,7 @@
   <div id="page" class="flex flex-col flex-wrap w-screen h-screen content-stretch">
     <div id="topbar" class="flex flex-row justify-between h-1/6 p-4 bg-[#014a95]">
       <div id="icon" class="">
-        <NImage src="/public/xy_logo.png"></NImage>
+        <NImage src="/xy_logo.png"></NImage>
       </div>
       <div id="info" class="flex flex-col flex-wrap content-between">
         <label class="text-[#fff] font-mono text-lg">计算机学院</label>
@@ -105,7 +105,12 @@ async function confirmUpload() {
     loading.value = false
   }, 60 * 1000)
   try {
-    const response = await axios.get('http://127.0.0.1:8080/generate', {
+    const response = await axios.post('http://127.0.0.1:8080/generate', {
+        userName: 'andy',
+    }, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
       responseType: 'arraybuffer'
     })
 

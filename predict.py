@@ -9,7 +9,7 @@ from utils.tdataloader import test_dataset
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--testsize', type=int, default=416, help='testing size')
-parser.add_argument('--pth_path', type=str, default='./checkpoints/BGNet/BGNet-24.pth')
+parser.add_argument('--pth_path', type=str, default='./checkpoints/best/BGNet.pth')
 parser.add_argument('--data_path', type=str, default='./web/data')
 parser.add_argument('--save_path', type=str, default='./web/result/')
 
