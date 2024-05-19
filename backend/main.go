@@ -10,9 +10,14 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var dataPaths = [2]string{
@@ -24,8 +29,34 @@ const savePath = "/home/andy/Code/github/BGNet/web/result/"
 
 var fileName string
 
+func recordMetrics() {
+	go func() {
+		for {
+			opsProcessed.Inc()
+			time.Sleep(2 * time.Second)
+		}
+	}()
+}
+
+var (
+	opsProcessed = promauto.NewCounter(prometheus.CounterOpts{
+		Name: "myapp_processed_ops_total",
+		Help: "The total number of processed events",
+	})
+)
+
+func promhttpServer() {
+	recordMetrics()
+
+	http.Handle("/metrics", promhttp.Handler())
+	http.ListenAndServe(":2112", nil)
+}
+
 func main() {
+	go promhttpServer()
+
 	r := gin.Default()
+	// r.RedirectTrailingSlash = false
 	r.MaxMultipartMemory = 8 << 20 // 20MiB
 
 	r.Use(gin.Logger())
@@ -48,33 +79,39 @@ func main() {
 
 		for file_idx, file := range files {
 			slog.Info("lgz debug", "PWD: ", os.Getenv("PWD"), "file: ", file.Filename)
-			if strings.HasSuffix(file.Filename, ".png") {
+			if strings.HasSuffix(file.Filename, ".jpg") {
 				fileName = file.Filename
 			}
 			c.SaveUploadedFile(file, dataPaths[file_idx]+file.Filename)
 		}
 	})
 
-	r.POST("/generate", func(c *gin.Context) {
-		ch := make(chan struct{})
-		go func() {
-			// JSON body
-			body := []byte(`{
-				"title": "Post title",
-				"body": "Post description",
-				"userId": 1
-				}`)
+	// r.GET("/generate", func(c *gin.Context) {
+	// 	// ch := make(chan struct{})
+	// 	// go func() {
+	// 	// 	// JSON body
+	// 	// 	body := []byte(`{
+	// 	// 		"title": "Post title",
+	// 	// 		"body": "Post description",
+	// 	// 		"userId": 1
+	// 	// 		}`)
 
-			_, err := http.Post("http://127.0.0.1:5000/model", "application/json", bytes.NewBuffer(body))
-			if err != nil {
-				slog.Error("error when call model", "err", err)
-			}
-			ch <- struct{}{}
-		}()
-		<-ch
+	// 	// 	_, err := http.Post("http://127.0.0.1:5000/model", "application/json", bytes.NewBuffer(body))
+	// 	// 	if err != nil {
+	// 	// 		slog.Error("error when call model", "err", err)
+	// 	// 	}
+	// 	// 	ch <- struct{}{}
+	// 	// }()
+	// 	// <-ch
+	// 	// getResultImage()
+	// 	c.Header("Content-Type", "image/png")
+	// 	// c.Header("Access-Control-Allow-Origin", "*")
+	// 	c.File(savePath + fileName)
+	// })
+
+	r.GET("/generate/", func(c *gin.Context) {
 		// getResultImage()
 		c.Header("Content-Type", "image/png")
-		// c.Header("Access-Control-Allow-Origin", "*")
 		c.File(savePath + fileName)
 	})
 
